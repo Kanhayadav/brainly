@@ -1,0 +1,8 @@
+**Response**
+
+1. Status 200 - Signed up 
+2. Status 411 - Error in inputs
+3. Status 403 -  User already exists with this username
+4. Status 500 - Server error
+
+
