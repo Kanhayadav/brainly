@@ -13,7 +13,6 @@ interface CardProps {
 export function Card({ _id, title, link, type }: CardProps) {
     async function deleteItem() {
         try {
-
             await axios.delete(BackendKey + '/api/v1/content', {
                 data: { contentId: _id },
                 withCredentials: true

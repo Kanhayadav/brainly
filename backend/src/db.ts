@@ -27,6 +27,10 @@ const contentSchema = new Schema({
     title: { type: String, required: true },
     tags: [{ type: Types.ObjectId, ref: 'tag' }],
     userId: { type: Types.ObjectId, ref: 'user', required: true },
+    embedding: {
+        type: [Number],
+        required: true
+    }
 })
 
 const linkSchema = new mongoose.Schema({
@@ -34,6 +38,7 @@ const linkSchema = new mongoose.Schema({
     userId: { type: Types.ObjectId, ref: 'user', required: true },
     expiresAt: { type: Date, required: false },
 })
+
 
 
 export const UserModel = model('user', userSchema)

@@ -15,7 +15,6 @@ export function ContentModel({ open, onClose }: ContentModelProps) {
     const titleRef = useRef<HTMLInputElement>(null);
     const typeRef = useRef<HTMLInputElement>(null);
     const linkRef = useRef<HTMLInputElement>(null);
-
     async function addContent() {
         try {
             const title = titleRef.current?.value
@@ -45,9 +44,9 @@ export function ContentModel({ open, onClose }: ContentModelProps) {
                                 </div>
                             </div>
                             <div>
-                                <Input ref={titleRef} placeholder={"Title"} />
-                                <Input ref={typeRef} placeholder={"Type:'link, youtube, x, twitter'"} />
-                                <Input ref={linkRef} placeholder={"Link"} />
+                                <Input ref={titleRef} type="text" placeholder={"Title"} />
+                                <Input ref={typeRef} type="text" placeholder={"Type:'link, youtube, x, twitter'"} />
+                                <Input ref={linkRef} type="text" placeholder={"Link"} />
                             </div>
                             <div className="flex justify-center pt-8">
                                 <Button onClick={addContent} variant='primary' text='Submit' size="sm" />

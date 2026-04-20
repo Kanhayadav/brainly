@@ -1,3 +1,4 @@
+import dotenv from "dotenv"
 require('dotenv').config();
 import express from 'express'
 import { dbkey, jwt_key } from './config'
@@ -9,6 +10,7 @@ import { UserModel, TaskModel, ContentModel, LinkModel } from './db'
 import { authMiddleware } from './middleware'
 import { z } from 'zod'
 import bcrypt from 'bcrypt'
+import { getEmbedding } from './openAI'
 const app = express()
 import cookieParer from 'cookie-parser'
 import { randomBytes } from 'node:crypto';
@@ -109,14 +111,25 @@ app.post('/api/v1/login', async (req, res) => {
 
 app.post('/api/v1/content', authMiddleware, async (req, res) => {
     const { link, type, title } = req.body
+    if (!title) {
+        return res.status(400).json({ message: "Title required" })
+    }
+    const textEmbeddingRawData = `${title}`
     try {
-        await ContentModel.create({
+        const content = await ContentModel.create({
             link,
             type,
             title,
             //@ts-ignore
             userId: req.userId,
-            tags: []
+            embedding: [],
+        })
+        getEmbedding(textEmbeddingRawData).then(async (embedding) => {
+            await ContentModel.findByIdAndUpdate(content._id, {
+                embedding
+            })
+        }).catch((err) => {
+            console.error("Embedding failed:", err)
         })
         return res.status(200).json({
             message: "content added to the db"
@@ -125,6 +138,41 @@ app.post('/api/v1/content', authMiddleware, async (req, res) => {
         return res.status(500).json({
             message: "error adding content to the db"
         })
+    }
+})
+
+app.post('/api/v1/search', authMiddleware, async (req, res) => {
+    const userId = (req as any).userId
+    const query = req.body?.query
+
+    if (!query) {
+        return res.status(400).json({ message: "Search text required" })
+    }
+    const embeddingOfUser = await getEmbedding(query)
+    try {
+        const result = await ContentModel.aggregate([
+            {
+                $vectorSearch: {
+                    index: "vector_seach_for_brainy",
+                    path: "embedding",
+                    queryVector: embeddingOfUser,
+                    numCandidates: 100,
+                    limit: 5,
+                    filter: {
+                        userId: new mongoose.Types.ObjectId(userId)
+                    }
+                }
+            },
+            {
+                $project: {
+                    embedding: 0
+                }
+            }
+        ])
+        return res.json(result)
+    } catch (e) {
+        console.error(e)
+        return res.status(500).json({ message: "Search failed" })
     }
 })
 

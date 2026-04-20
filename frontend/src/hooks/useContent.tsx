@@ -17,7 +17,7 @@ export function useContent() {
         rerunning()
         let interval = setInterval(() => {
             rerunning()
-        }, (10 * 100))
+        }, (2000))
         return () => {
             clearInterval(interval)
         }

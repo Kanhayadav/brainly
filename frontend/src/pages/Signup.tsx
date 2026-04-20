@@ -2,20 +2,26 @@ import { Input } from "../components/ui/Input"
 import { Button } from "../components/ui/Button"
 import { useNavigate } from "react-router-dom"
 import { BackendKey } from '../config'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import axios from "axios";
 
 export function Signup() {
     let navigate = useNavigate()
+    const [error, setError] = useState('')
     const usernameRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
     async function signup() {
         const email = usernameRef.current?.value;
         const password = passwordRef.current?.value;
-        await axios.post(BackendKey + "/api/v1/signup", {
-            email, password
-        })
-        navigate('/login');
+        try {
+            await axios.post(BackendKey + "/api/v1/signup", {
+                email, password
+            })
+            setError("")
+            navigate('/login');
+        } catch (e: any) {
+            setError("something went wrong:(")
+        }
     }
     return (
         <>
@@ -27,6 +33,12 @@ export function Signup() {
                     </span>
                     <Input ref={usernameRef} type="text" placeholder="Email"></Input>
                     <Input ref={passwordRef} type="password" placeholder="Password"></Input>
+                    {error && (
+                        <div className="mt-5 text-center text-white bg-red-500 font-bold p-3">
+                            {error}
+                        </div>
+                    )}
+
                     <div className="flex justify-center pt-10">
                         <Button text="Signup" onClick={signup} variant="primary" size="sm" loading={false}></Button>
                     </div>

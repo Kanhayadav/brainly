@@ -1,10 +1,11 @@
 import { NoteBookIcon } from "../../icons/NoteBookIcon";
 import { ShareIcon } from "../../icons/ShareIcon";
 
+
 interface CardProps {
     title: string,
     link: string,
-    type: "x" | "youtube" | "image" | "video" | "article" | "twitter" | "instagram" | "insta";
+    type: "x" | "youtube" | "image" | "video" | "article" | "twitter" | "instagram" | "insta" | "wiki";
 }
 export function Cardsharing({ title, link, type }: CardProps) {
 
@@ -41,7 +42,6 @@ export function Cardsharing({ title, link, type }: CardProps) {
                                 </blockquote>
                             </div>
                         )}
-
                         {type === "youtube" && (
                             <div className="h-full border-[3px] border-black bg-black overflow-hidden">
                                 <iframe

@@ -12,6 +12,8 @@ import { BackendKey } from '../config'
 
 
 export function Dashboard() {
+    const [searchResults, setSearchResults] = useState<any[]>([])
+    const [query, setQuery] = useState("")
 
     async function shareBrain() {
         try {
@@ -26,6 +28,7 @@ export function Dashboard() {
 
     const navigate = useNavigate();
     const contents = useContent();
+
     async function handleLogout() {
         try {
             await axios.post(BackendKey + "/api/v1/logout", {}, { withCredentials: true })
@@ -39,8 +42,12 @@ export function Dashboard() {
     }
 
     const [modelOpen, setModelOpen] = useState(false)
+    const isSearching = query.trim().length > 0
     return (<>
-        <Siderbar />
+        <Siderbar
+            setSearchResults={setSearchResults}
+            setQuery={setQuery}
+        />
         <div className='p-4 ml-90 min-h-screen bg-[#7a4398]'>
             <ContentModel open={modelOpen} onClose={() => { setModelOpen(false) }} />
             <div className='flex gap-4 justify-end items-center'>
@@ -53,12 +60,12 @@ export function Dashboard() {
                     </div>
                 </div>
             </div>
+
             <div className='pl-2 m-10 flex flex-row flex-wrap gap-8'>
-                {contents.map(({ type, link, title, _id }) =>
-                    <Card _id={_id} type={type} link={link} title={title} />
+
+                {(isSearching ? searchResults : contents).map(({ type, link, title, _id }) =>
+                    <Card key={_id} _id={_id} type={type} link={link} title={title} />
                 )}
-
-
             </div>
 
         </div>
