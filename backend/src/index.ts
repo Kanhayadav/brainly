@@ -14,6 +14,7 @@ import { getEmbedding } from './openAI'
 const app = express()
 import cookieParer from 'cookie-parser'
 import { randomBytes } from 'node:crypto';
+const PORT = process.env.PORT || 3000;
 app.use(cors({
     origin: "http://localhost:5173",
     credentials: true
@@ -272,6 +273,6 @@ app.post('/api/v1/logout', async (req, res) => {
 
 DBconnection()
 
-app.listen(3000, () => {
-    console.log("server runnign ;O ")
+app.listen(PORT, () => {
+    console.log(`server running on port ${PORT}`);
 })
