@@ -1,12 +1,11 @@
 import type { ReactElement } from "react";
 
-
 type Variants = "primary" | "secondary";
-
+type Sizes = "sm" | "md" | "lg";
 
 interface ButtonProps {
-    variant: Variants;
-    size: 'sm' | 'md' | 'lg';
+    variant?: Variants;
+    size?: Sizes;
     text: string;
     startIcon?: ReactElement;
     onClick?: () => void;
@@ -14,37 +13,49 @@ interface ButtonProps {
 }
 
 const variantStyles = {
-    primary: "bg-primary text-white text-base",
-    secondary: "bg-secondary text-primary"
-}
-
-const defaultStyles = "rounded cursor-pointer flex p-1 items-center "
+    primary: "bg-yellow-300 text-black",
+    secondary: "bg-white text-black"
+};
 
 const sizeStyles = {
-    "sm": "p-2",
-    "md": "p-4",
-    "lg": "p-6"
-}
+    sm: "px-3 py-1 text-sm",
+    md: "px-4 py-2 text-base",
+    lg: "px-6 py-3 text-lg"
+};
 
-export function Button({ text, onClick }: any) {
+export function Button({
+    text,
+    onClick,
+    variant = "primary",
+    size = "md",
+    startIcon,
+    loading
+}: ButtonProps) {
+
     return (
         <button
             onClick={onClick}
-            className="
-        border-2 border-black 
-        transition-all
-        bg-yellow-300 
-        px-4 py-2 
-        font-bold 
-        shadow-[4px_4px_0px_black]
-        active:shadow-none 
-        active:translate-x-[4px] 
-        active:translate-y-[4px]
-        hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]
-        cursor-pointer
-      "
+            disabled={loading}
+            className={`
+                border-2 border-black
+                transition-all
+                font-bold
+                flex items-center gap-2
+                cursor-pointer
+                shadow-[4px_4px_0px_black]
+                active:shadow-none
+                active:translate-x-[4px]
+                active:translate-y-[4px]
+                hover:shadow-none
+                hover:translate-x-[2px]
+                hover:translate-y-[2px]
+                ${variantStyles[variant]}
+                ${sizeStyles[size]}
+            `}
         >
-            {text}
+            {startIcon}
+
+            {loading ? "Loading..." : text}
         </button>
     );
 }

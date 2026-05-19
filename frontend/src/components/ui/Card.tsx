@@ -10,7 +10,7 @@ interface CardProps {
     link: string,
     type: "x" | "youtube" | 'image' | 'video' | 'article' | 'youtube' | 'twitter' | 'x' | 'X' | 'Youtube' | 'link'
 }
-export function Card({ _id, title, link, type }: CardProps) {
+export function Card({ _id, title, link }: CardProps) {
     async function deleteItem() {
         try {
             await axios.delete(BackendKey + '/api/v1/content', {
