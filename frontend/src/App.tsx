@@ -12,15 +12,12 @@ function App() {
       <Routes>
         <Route path="/" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>}></Route>
-
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>}></Route >
-
         <Route path="/dashboard" element={
           <ProtectedRoute>
             <Dashboard />
           </ProtectedRoute>
         } />
-
         {/*incapsulate the dashbaord compoment in the protected route*/}
         <Route path="/share/:hash" element={<SharedPage />}></Route>
       </Routes >
